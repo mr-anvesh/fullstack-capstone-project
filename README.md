@@ -1,0 +1,9 @@
+- add rabbitmq
+- add nginx (LB)
+- add kong (API Gateway)
+- add postgresql w/ connection pooling
+- add redis
+- add auth
+- add gRPC
+- add DOCKER/K8s
+- Database Schema Design
