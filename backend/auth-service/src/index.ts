@@ -1,12 +1,14 @@
 import express from 'express';
-import {registerUser, loginUser} from './services/user.service'
+import { registerUser, loginUser } from './services/user.service';
 
 const app = express();
+const authRouter = express.Router();
 
 app.use(express.json());
 
-app.post('/auth/register', registerUser);
+authRouter.post('/register', registerUser);
+authRouter.post('/login', loginUser);
 
-app.post('/auth/login', loginUser);
+app.use('/auth', authRouter);
 
-app.listen(process.env.PORT || 4001)
+app.listen(process.env.PORT || 4001);
