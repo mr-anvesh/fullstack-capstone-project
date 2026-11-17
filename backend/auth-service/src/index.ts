@@ -8,3 +8,5 @@ app.use(express.json());
 app.post('/auth/register', registerUser);
 
 app.post('/auth/login', loginUser);
+
+app.listen(process.env.PORT || 4001)

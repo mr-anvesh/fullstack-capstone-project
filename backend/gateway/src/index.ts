@@ -1,33 +1,13 @@
 import express from 'express';
-import rateLimit from 'express-rate-limit';
-import { createProxyMiddleware } from 'http-proxy-middleware';
+import { proxy } from './middlewares/proxy.js';
+import { limiter } from './middlewares/rate-limiter.js';
+import { attachUserId } from './middlewares/attach-user.js';
 
 const app = express();
 const router = express.Router();
 
-const rateLimitKey = (req: express.Request): string => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader?.split(' ')[1];
-
-  return token ?? req.ip ?? "unknown";
-};
-
-const limiter = rateLimit({
-  windowMs: 60_000,
-  limit: 30,
-  standardHeaders: true,
-  legacyHeaders: false,
-  keyGenerator: rateLimitKey,
-});
-
 app.use(limiter);
-
-const proxy = (target: string, pathFilter: string) =>
-  createProxyMiddleware({ 
-    target, 
-    changeOrigin: true, 
-    pathFilter 
-  });
+app.use(attachUserId);
 
 router.use('/auth', proxy(process.env.AUTH_URL ?? 'http://localhost:4001', '/auth'));
 router.use('/providers', proxy(process.env.CATALOG_URL ?? 'http://localhost:4002', '/providers'));
