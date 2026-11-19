@@ -7,6 +7,10 @@
     "Properties": {
       "model": "Properties",
       "namespace": "public"
+    },
+    "PropertyImage": {
+      "model": "PropertyImage",
+      "namespace": "public"
     }
   },
   "domain": {
@@ -61,7 +65,23 @@
                 }
               }
             },
-            "relations": {},
+            "relations": {
+              "images": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "propertyId"
+                  ]
+                },
+                "to": {
+                  "model": "PropertyImage",
+                  "namespace": "public"
+                }
+              }
+            },
             "storage": {
               "fields": {
                 "hostId": {
@@ -85,6 +105,74 @@
               },
               "namespaceId": "public",
               "table": "Properties"
+            }
+          },
+          "PropertyImage": {
+            "fields": {
+              "displayOrder": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "objectKey": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "propertyId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "property": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "propertyId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Properties",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "displayOrder": {
+                  "column": "displayOrder"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "objectKey": {
+                  "column": "objectKey"
+                },
+                "propertyId": {
+                  "column": "propertyId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "PropertyImage"
             }
           }
         }
@@ -157,6 +245,68 @@
                 ]
               },
               "uniques": []
+            },
+            "PropertyImage": {
+              "columns": {
+                "displayOrder": {
+                  "codecId": "pg/int4@1",
+                  "dataType": "pg/int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "objectKey": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                },
+                "propertyId": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "index": {
+                    "name": "PropertyImage_propertyId_idx_4bcae41c"
+                  },
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "propertyId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "PropertyImage"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "Properties"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "propertyId"
+                  ],
+                  "name": "PropertyImage_propertyId_idx_4bcae41c",
+                  "prefix": "PropertyImage_propertyId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             }
           }
         },
@@ -164,10 +314,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "d15e3e1a94e9d7068edf0670d55a50ca8d5335de7fb4aa49c588424fc61cd61a"
+    "storageHash": "526093b688e35cfd97d12be79b94fb480ea31ca418068357dda0e262a2fa8399"
   },
   "execution": {
-    "executionHash": "406663e055eba3e524fe45dc93051a5fd7a94bc381476762044c7d95c79bf0d4",
+    "executionHash": "3c699fa21f96bfe2add02baa2c3c5c5e99e9b0b0008f9692b88b6c7908483439",
     "mutations": {
       "defaults": [
         {
@@ -177,6 +327,17 @@
           },
           "ref": {
             "entry": "Properties",
+            "field": "id",
+            "namespace": "public"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "entry": "PropertyImage",
             "field": "id",
             "namespace": "public"
           }

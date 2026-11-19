@@ -7,7 +7,18 @@ model Properties {
   location      String
   pricePerDay   Decimal
   maxGuests     Int
+  images        PropertyImage[]
 
   @@index([location])
   @@index([hostId])
+}
+
+model PropertyImage {
+  id           String @id @onCreate(uuid())
+  propertyId   String
+  objectKey    String
+  displayOrder Int
+  property     Properties @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
 }
