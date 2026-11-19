@@ -1,0 +1,23 @@
+// use prisma-8
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Booking {
+  id               String        @id @onCreate(uuid())
+  guestId          UuidString
+  hostId           UuidString
+  propertyId       UuidString
+  startsAt         DateTime
+  endsAt           DateTime
+  guestCount       Int
+  totalAmount      Decimal
+  status           BookingStatus @default(CONFIRMED)
+
+  @@index([guestId])
+  @@index([hostId])
+  @@index([propertyId, startsAt, endsAt])
+}
