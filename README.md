@@ -3,8 +3,8 @@
 - [x] add postgresql with prisma orm
 - [x] add auth
 - [x] Database Schema Design
+- [x] add redis for search caching based on location, user
 - [ ] add rabbitmq
-- [ ] add redis for search caching based on location, user
 - [ ] add gRPC
 - [ ] add DOCKER
 - [ ] add AWS

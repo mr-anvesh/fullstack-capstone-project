@@ -5,6 +5,7 @@ import { getListingByUserController } from './controllers/getListingByUser.contr
 import { listingByIdController } from './controllers/listingById.controller';
 import { listingsByLocationController } from './controllers/listingsByLocation.controller';
 import { updateListingController } from './controllers/updateListing.controller';
+import { connectRedis } from './config/redis';
 
 const app = express();
 const router = express.Router();
@@ -19,5 +20,9 @@ router.patch('/listings/update', updateListingController);
 router.post('/listings/delete', deleteListingController);
 
 app.use(router);
+
+void connectRedis().catch((err) => {
+    console.error('Error connecting to Redis:', err);
+});
 
 app.listen(process.env.PORT || 4003);
