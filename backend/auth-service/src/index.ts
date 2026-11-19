@@ -1,13 +1,13 @@
 import express from 'express';
-import { registerUser, loginUser } from './services/user.service';
+import { loginUserController, registerUserController } from './controllers/auth.controller';
 
 const app = express();
 const authRouter = express.Router();
 
 app.use(express.json());
 
-authRouter.post('/register', registerUser);
-authRouter.post('/login', loginUser);
+authRouter.post('/register', registerUserController);
+authRouter.post('/login', loginUserController);
 
 app.use('/auth', authRouter);
 

@@ -1,1 +1,0 @@
-- [ ] add rabbitmq consumer
