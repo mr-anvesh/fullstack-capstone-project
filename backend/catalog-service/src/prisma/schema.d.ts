@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'b970a80a4acb4b85fc00176e0f3a854b339d5d705a41d0e8a3364672aa871a19'>;
+  StorageHashBase<'d15e3e1a94e9d7068edf0670d55a50ca8d5335de7fb4aa49c588424fc61cd61a'>;
 export type ExecutionHash =
-  ExecutionHashBase<'f07b2b4b61f85f275d4368864066e49e2af53c4285e3673d6945ef1c7bf5dfb8'>;
+  ExecutionHashBase<'406663e055eba3e524fe45dc93051a5fd7a94bc381476762044c7d95c79bf0d4'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -309,21 +309,20 @@ export type StorageColumnInputTypes = ColumnTypesFromStorage<
 >;
 
 export namespace Models {
-  export type public_Offering = {
-    availableFrom: FieldOutputTypes['public']['Offering']['availableFrom'];
-    availableTo: FieldOutputTypes['public']['Offering']['availableTo'];
-    hostId: FieldOutputTypes['public']['Offering']['hostId'];
-    id: FieldOutputTypes['public']['Offering']['id'];
-    location: FieldOutputTypes['public']['Offering']['location'];
-    maxGuests: FieldOutputTypes['public']['Offering']['maxGuests'];
-    name: FieldOutputTypes['public']['Offering']['name'];
+  export type public_Properties = {
+    hostId: FieldOutputTypes['public']['Properties']['hostId'];
+    id: FieldOutputTypes['public']['Properties']['id'];
+    location: FieldOutputTypes['public']['Properties']['location'];
+    maxGuests: FieldOutputTypes['public']['Properties']['maxGuests'];
+    name: FieldOutputTypes['public']['Properties']['name'];
+    pricePerDay: FieldOutputTypes['public']['Properties']['pricePerDay'];
     readonly [RelationKeys]?: never;
   };
 }
 
 export declare const models: {
   public: {
-    Offering: Models.public_Offering;
+    Properties: Models.public_Properties;
   };
 };
 
@@ -345,22 +344,8 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
-            readonly Offering: {
+            readonly Properties: {
               columns: {
-                readonly availableFrom: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
-                  readonly many: false;
-                };
-                readonly availableTo: {
-                  readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
-                  readonly many: false;
-                };
                 readonly hostId: {
                   readonly dataType: 'pg/char';
                   readonly codecId: 'sql/char@1';
@@ -392,20 +377,26 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
+                readonly pricePerDay: {
+                  readonly dataType: 'pg/numeric';
+                  readonly codecId: 'pg/numeric@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'Offering_hostId_idx_05205577';
-                  readonly prefix: 'Offering_hostId_idx';
+                  readonly name: 'Properties_hostId_idx_05205577';
+                  readonly prefix: 'Properties_hostId_idx';
                   readonly columns: readonly ['hostId'];
                   readonly unique: false;
                 },
                 {
-                  readonly name: 'Offering_location_availableFrom_availableTo_idx_5e323e0f';
-                  readonly prefix: 'Offering_location_availableFrom_availableTo_idx';
-                  readonly columns: readonly ['location', 'availableFrom', 'availableTo'];
+                  readonly name: 'Properties_location_idx_7f5d3991';
+                  readonly prefix: 'Properties_location_idx';
+                  readonly columns: readonly ['location'];
                   readonly unique: false;
                 },
               ];
@@ -422,30 +413,17 @@ type ContractBase = Omit<
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
   readonly roots: {
-    readonly Offering: { readonly namespace: 'public' & NamespaceId; readonly model: 'Offering' };
+    readonly Properties: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'Properties';
+    };
   };
   readonly domain: {
     readonly namespaces: {
       readonly public: {
         readonly models: {
-          readonly Offering: {
+          readonly Properties: {
             readonly fields: {
-              readonly availableFrom: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
-                };
-              };
-              readonly availableTo: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
-                };
-              };
               readonly hostId: {
                 readonly nullable: false;
                 readonly type: {
@@ -470,19 +448,22 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly pricePerDay: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/numeric@1' };
+              };
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'Offering';
+              readonly table: 'Properties';
               readonly namespaceId: 'public';
               readonly fields: {
-                readonly availableFrom: { readonly column: 'availableFrom' };
-                readonly availableTo: { readonly column: 'availableTo' };
                 readonly hostId: { readonly column: 'hostId' };
                 readonly id: { readonly column: 'id' };
                 readonly location: { readonly column: 'location' };
                 readonly maxGuests: { readonly column: 'maxGuests' };
                 readonly name: { readonly column: 'name' };
+                readonly pricePerDay: { readonly column: 'pricePerDay' };
               };
             };
           };
@@ -526,7 +507,7 @@ type ContractBase = Omit<
         {
           readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
           readonly ref: {
-            readonly entry: 'Offering';
+            readonly entry: 'Properties';
             readonly field: 'id';
             readonly namespace: 'public';
           };

@@ -4,8 +4,8 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "Offering": {
-      "model": "Offering",
+    "Properties": {
+      "model": "Properties",
       "namespace": "public"
     }
   },
@@ -13,28 +13,8 @@
     "namespaces": {
       "public": {
         "models": {
-          "Offering": {
+          "Properties": {
             "fields": {
-              "availableFrom": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
-              "availableTo": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
-                }
-              },
               "hostId": {
                 "nullable": false,
                 "type": {
@@ -72,17 +52,18 @@
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
+              },
+              "pricePerDay": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/numeric@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {},
             "storage": {
               "fields": {
-                "availableFrom": {
-                  "column": "availableFrom"
-                },
-                "availableTo": {
-                  "column": "availableTo"
-                },
                 "hostId": {
                   "column": "hostId"
                 },
@@ -97,10 +78,13 @@
                 },
                 "name": {
                   "column": "name"
+                },
+                "pricePerDay": {
+                  "column": "pricePerDay"
                 }
               },
               "namespaceId": "public",
-              "table": "Offering"
+              "table": "Properties"
             }
           }
         }
@@ -112,24 +96,8 @@
       "public": {
         "entries": {
           "table": {
-            "Offering": {
+            "Properties": {
               "columns": {
-                "availableFrom": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
-                "availableTo": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
-                },
                 "hostId": {
                   "codecId": "sql/char@1",
                   "dataType": "pg/char",
@@ -157,6 +125,11 @@
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
+                },
+                "pricePerDay": {
+                  "codecId": "pg/numeric@1",
+                  "dataType": "pg/numeric",
+                  "nullable": false
                 }
               },
               "foreignKeys": [],
@@ -165,18 +138,16 @@
                   "columns": [
                     "hostId"
                   ],
-                  "name": "Offering_hostId_idx_05205577",
-                  "prefix": "Offering_hostId_idx",
+                  "name": "Properties_hostId_idx_05205577",
+                  "prefix": "Properties_hostId_idx",
                   "unique": false
                 },
                 {
                   "columns": [
-                    "location",
-                    "availableFrom",
-                    "availableTo"
+                    "location"
                   ],
-                  "name": "Offering_location_availableFrom_availableTo_idx_5e323e0f",
-                  "prefix": "Offering_location_availableFrom_availableTo_idx",
+                  "name": "Properties_location_idx_7f5d3991",
+                  "prefix": "Properties_location_idx",
                   "unique": false
                 }
               ],
@@ -193,10 +164,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b970a80a4acb4b85fc00176e0f3a854b339d5d705a41d0e8a3364672aa871a19"
+    "storageHash": "d15e3e1a94e9d7068edf0670d55a50ca8d5335de7fb4aa49c588424fc61cd61a"
   },
   "execution": {
-    "executionHash": "f07b2b4b61f85f275d4368864066e49e2af53c4285e3673d6945ef1c7bf5dfb8",
+    "executionHash": "406663e055eba3e524fe45dc93051a5fd7a94bc381476762044c7d95c79bf0d4",
     "mutations": {
       "defaults": [
         {
@@ -205,7 +176,7 @@
             "kind": "generator"
           },
           "ref": {
-            "entry": "Offering",
+            "entry": "Properties",
             "field": "id",
             "namespace": "public"
           }
