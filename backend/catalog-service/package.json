@@ -4,8 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "contract:emit": "prisma contract emit"
   },
   "keywords": [],
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@prisma/orm-postgres": "^8.0.0-rc.24",
+    "dotenv": "^18.0.10"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  },
+  "devDependencies": {
+    "@prisma/cli-engine": "^0.10.0",
+    "@types/node": "^26.6.6",
+    "prisma": "^8.0.0-rc.34"
+  }
 }

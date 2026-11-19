@@ -1,0 +1,14 @@
+// use prisma-8
+
+model Offering {
+  id            String   @id @onCreate(uuid())
+  hostId        UuidString
+  name          String
+  location      String
+  availableFrom DateTime
+  availableTo   DateTime
+  maxGuests     Int
+
+  @@index([location, availableFrom, availableTo])
+  @@index([hostId])
+}
