@@ -16,5 +16,6 @@ router.use('/notifications', proxy(process.env.NOTIFICATION_URL ?? 'http://local
 
 app.use(router);
 
+const PORT = process.env.PORT;
 
-app.listen(3000, () => console.log('Gateway is running on PORT: 3000'));
+app.listen(PORT, () => console.log(`Gateway is running on PORT: ${PORT}`));

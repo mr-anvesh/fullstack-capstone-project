@@ -4,8 +4,10 @@ import rateLimit from 'express-rate-limit';
 const rateLimitKey = (req: Request): string => {
   const authHeader = req.headers.authorization;
   const token = authHeader?.split(' ')[1];
+  const realIp = req.headers['x-real-ip'];
+  const clientIp = typeof realIp === 'string' ? realIp : req.socket.remoteAddress ?? 'unknown';
 
-  return token ?? req.ip ?? "unknown";
+  return token ?? clientIp;
 };
 
 export const limiter = rateLimit({
