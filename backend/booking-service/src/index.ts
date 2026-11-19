@@ -15,4 +15,4 @@ app.get('/bookings', getUserBookingsController);
 app.post('/cancel-booking', cancelBookingController);
 app.post('/getdetails', getBookingDetailsController);
 
-app.listen(process.env.PORT || 4003);
+app.listen(process.env.PORT || 4002);

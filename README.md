@@ -8,3 +8,5 @@
 - [ ] add gRPC
 - [ ] add DOCKER
 - [ ] add payment schema
+- [ ] add AWS
+
