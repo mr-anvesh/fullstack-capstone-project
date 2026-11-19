@@ -1,0 +1,61 @@
+Schema after Payment Service Integration:
+
+// use prisma-8
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Booking {
+  id               String               @id @onCreate(uuid())
+  bookingReference String               @unique
+  userId           String
+  status           BookingStatus        @default(PENDING)
+  paymentStatus    PaymentStatus        @default(PENDING)
+  totalAmount      Decimal
+  currency         String
+  startsAt         DateTime?
+  endsAt           DateTime?
+  createdAt        DateTime             @onCreate(now())
+  updatedAt        temporal.UpdatedAt
+  items            BookingItem[]
+  transactions     PaymentTransaction[]
+}
+
+model BookingItem {
+  id           String  @id @onCreate(uuid())
+  bookingId    String
+  offeringId   String
+  providerId   String
+  offeringName String
+  quantity     Int     @default(1)
+  unitAmount   Decimal
+  totalAmount  Decimal
+  startsAt     DateTime?
+  endsAt       DateTime?
+  booking      Booking @relation(fields: [bookingId], references: [id])
+}
+
+model PaymentTransaction {
+  id                    String        @id @onCreate(uuid())
+  bookingId             String
+  providerTransactionId String?       @unique
+  amount                Decimal
+  currency              String
+  status                PaymentStatus
+  createdAt             DateTime      @onCreate(now())
+  updatedAt             temporal.UpdatedAt
+  booking               Booking      @relation(fields: [bookingId], references: [id])
+}
