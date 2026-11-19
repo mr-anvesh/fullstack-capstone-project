@@ -7,3 +7,4 @@
 - [ ] add redis
 - [ ] add gRPC
 - [ ] add DOCKER
+- [ ] add payment schema
