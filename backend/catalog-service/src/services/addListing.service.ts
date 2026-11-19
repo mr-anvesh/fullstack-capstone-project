@@ -1,4 +1,3 @@
-
 import { db } from "../prisma/db";
 import type { Property } from "../schemas/property.schema";
 
