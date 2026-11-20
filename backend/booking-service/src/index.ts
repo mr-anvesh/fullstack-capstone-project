@@ -6,13 +6,16 @@ import { cancelBookingController } from './controllers/cancelBooking.controller.
 import { getBookingDetailsController } from './controllers/getBookingDetails.controller.js';
 
 const app = express();
+const bookings = express.Router();
 
-app.use(express.json())
+app.use(express.json());
 app.use(checkUser);
 
-app.post('/book', createBookingController);
-app.get('/bookings', getUserBookingsController);
-app.post('/cancel-booking', cancelBookingController);
-app.post('/getdetails', getBookingDetailsController);
+bookings.get('/', getUserBookingsController);
+bookings.post('/book', createBookingController);
+bookings.post('/cancel-booking', cancelBookingController);
+bookings.post('/getdetails', getBookingDetailsController);
+
+app.use('/bookings', bookings);
 
 app.listen(process.env.PORT || 4002);

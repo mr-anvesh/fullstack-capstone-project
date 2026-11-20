@@ -11,18 +11,11 @@ const notificationUrl = process.env.NOTIFICATION_URL ?? 'http://localhost:4004';
 const app = express();
 const router = express.Router();
 
-
 app.use(limiter);
 app.use(attachUserId);
 
 router.use('/auth', proxy(authUrl, { preservePath: true }));
-
-const bookingProxy = proxy(bookingUrl);
-// Match GET /bookings first so the service receives /bookings.
-router.get('/bookings', bookingProxy);
-// Strip the /bookings prefix from subroutes, such as /bookings/book → /book.
-router.use('/bookings', bookingProxy);
-
+router.use('/bookings', proxy(bookingUrl, { preservePath: true }));
 router.use('/listings', proxy(catalogUrl, { preservePath: true }));
 router.use('/notifications', proxy(notificationUrl));
 
