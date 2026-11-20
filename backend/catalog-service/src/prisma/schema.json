@@ -8,8 +8,8 @@
       "model": "Properties",
       "namespace": "public"
     },
-    "PropertyImage": {
-      "model": "PropertyImage",
+    "PropertyImageUrl": {
+      "model": "PropertyImageUrl",
       "namespace": "public"
     }
   },
@@ -66,7 +66,7 @@
               }
             },
             "relations": {
-              "images": {
+              "imageUrls": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
@@ -77,7 +77,7 @@
                   ]
                 },
                 "to": {
-                  "model": "PropertyImage",
+                  "model": "PropertyImageUrl",
                   "namespace": "public"
                 }
               }
@@ -107,7 +107,7 @@
               "table": "Properties"
             }
           },
-          "PropertyImage": {
+          "PropertyImageUrl": {
             "fields": {
               "displayOrder": {
                 "nullable": false,
@@ -123,14 +123,14 @@
                   "kind": "scalar"
                 }
               },
-              "objectKey": {
+              "propertyId": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
-              "propertyId": {
+              "url": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
@@ -164,15 +164,15 @@
                 "id": {
                   "column": "id"
                 },
-                "objectKey": {
-                  "column": "objectKey"
-                },
                 "propertyId": {
                   "column": "propertyId"
+                },
+                "url": {
+                  "column": "url"
                 }
               },
               "namespaceId": "public",
-              "table": "PropertyImage"
+              "table": "PropertyImageUrl"
             }
           }
         }
@@ -246,7 +246,7 @@
               },
               "uniques": []
             },
-            "PropertyImage": {
+            "PropertyImageUrl": {
               "columns": {
                 "displayOrder": {
                   "codecId": "pg/int4@1",
@@ -258,12 +258,12 @@
                   "dataType": "pg/text",
                   "nullable": false
                 },
-                "objectKey": {
+                "propertyId": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
                 },
-                "propertyId": {
+                "url": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
@@ -272,7 +272,7 @@
               "foreignKeys": [
                 {
                   "index": {
-                    "name": "PropertyImage_propertyId_idx_4bcae41c"
+                    "name": "PropertyImageUrl_propertyId_idx_4bcae41c"
                   },
                   "onDelete": "cascade",
                   "source": {
@@ -280,7 +280,7 @@
                       "propertyId"
                     ],
                     "namespaceId": "public",
-                    "tableName": "PropertyImage"
+                    "tableName": "PropertyImageUrl"
                   },
                   "target": {
                     "columns": [
@@ -296,8 +296,8 @@
                   "columns": [
                     "propertyId"
                   ],
-                  "name": "PropertyImage_propertyId_idx_4bcae41c",
-                  "prefix": "PropertyImage_propertyId_idx",
+                  "name": "PropertyImageUrl_propertyId_idx_4bcae41c",
+                  "prefix": "PropertyImageUrl_propertyId_idx",
                   "unique": false
                 }
               ],
@@ -314,10 +314,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "526093b688e35cfd97d12be79b94fb480ea31ca418068357dda0e262a2fa8399"
+    "storageHash": "719414d5509263404d332d7f77f2ad08cb85936239c8d293d9666b8719b576e5"
   },
   "execution": {
-    "executionHash": "3c699fa21f96bfe2add02baa2c3c5c5e99e9b0b0008f9692b88b6c7908483439",
+    "executionHash": "11920227611e6cc5569d96803c248b3bc0be0606bca4bd1a371c05f468320d9c",
     "mutations": {
       "defaults": [
         {
@@ -337,7 +337,7 @@
             "kind": "generator"
           },
           "ref": {
-            "entry": "PropertyImage",
+            "entry": "PropertyImageUrl",
             "field": "id",
             "namespace": "public"
           }

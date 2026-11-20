@@ -1,19 +1,27 @@
 import { client } from "../config/redis";
 import { db } from "../prisma/db";
 import type { Property } from "../schemas/property.schema";
+import { replacePropertyImageUrls } from "./propertyImages.service";
 
 export async function addListing(listingData: Property) {
-    const data = await db.orm.public.Properties
-        .create(
-            {
-                ...listingData,
-                pricePerDay: String(listingData.pricePerDay),
-            }
-        );
-    if(!data) throw new Error("Failed to add the listing");
-    
-    await client.del(listingData.hostId); // Invalidate the cache for the host's listings
-    await client.del(listingData.location); // Invalidate the cache for the location's listings
+  const { imageUrls, ...propertyData } = listingData;
 
-    return data;
+  const property = await db.orm.public.Properties.create({
+    ...propertyData,
+    pricePerDay: String(propertyData.pricePerDay),
+  });
+
+  if (!property) {
+    throw new Error("Failed to add the listing");
+  }
+
+  await replacePropertyImageUrls(property.id, imageUrls);
+
+  await client.del(propertyData.hostId);
+  await client.del(propertyData.location);
+
+  return {
+    ...property,
+    imageUrls,
+  };
 }

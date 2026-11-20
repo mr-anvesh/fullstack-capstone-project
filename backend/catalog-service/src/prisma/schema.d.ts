@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'526093b688e35cfd97d12be79b94fb480ea31ca418068357dda0e262a2fa8399'>;
+  StorageHashBase<'719414d5509263404d332d7f77f2ad08cb85936239c8d293d9666b8719b576e5'>;
 export type ExecutionHash =
-  ExecutionHashBase<'3c699fa21f96bfe2add02baa2c3c5c5e99e9b0b0008f9692b88b6c7908483439'>;
+  ExecutionHashBase<'11920227611e6cc5569d96803c248b3bc0be0606bca4bd1a371c05f468320d9c'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -316,14 +316,14 @@ export namespace Models {
     maxGuests: FieldOutputTypes['public']['Properties']['maxGuests'];
     name: FieldOutputTypes['public']['Properties']['name'];
     pricePerDay: FieldOutputTypes['public']['Properties']['pricePerDay'];
-    images: public_PropertyImage[];
-    readonly [RelationKeys]?: 'images';
+    imageUrls: public_PropertyImageUrl[];
+    readonly [RelationKeys]?: 'imageUrls';
   };
-  export type public_PropertyImage = {
-    displayOrder: FieldOutputTypes['public']['PropertyImage']['displayOrder'];
-    id: FieldOutputTypes['public']['PropertyImage']['id'];
-    objectKey: FieldOutputTypes['public']['PropertyImage']['objectKey'];
-    propertyId: FieldOutputTypes['public']['PropertyImage']['propertyId'];
+  export type public_PropertyImageUrl = {
+    displayOrder: FieldOutputTypes['public']['PropertyImageUrl']['displayOrder'];
+    id: FieldOutputTypes['public']['PropertyImageUrl']['id'];
+    propertyId: FieldOutputTypes['public']['PropertyImageUrl']['propertyId'];
+    url: FieldOutputTypes['public']['PropertyImageUrl']['url'];
     property: public_Properties;
     readonly [RelationKeys]?: 'property';
   };
@@ -332,7 +332,7 @@ export namespace Models {
 export declare const models: {
   public: {
     Properties: Models.public_Properties;
-    PropertyImage: Models.public_PropertyImage;
+    PropertyImageUrl: Models.public_PropertyImageUrl;
   };
 };
 
@@ -412,7 +412,7 @@ type ContractBase = Omit<
               ];
               foreignKeys: readonly [];
             };
-            readonly PropertyImage: {
+            readonly PropertyImageUrl: {
               columns: {
                 readonly displayOrder: {
                   readonly dataType: 'pg/int4';
@@ -426,13 +426,13 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly objectKey: {
+                readonly propertyId: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                   readonly many: false;
                 };
-                readonly propertyId: {
+                readonly url: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -443,8 +443,8 @@ type ContractBase = Omit<
               uniques: readonly [];
               indexes: readonly [
                 {
-                  readonly name: 'PropertyImage_propertyId_idx_4bcae41c';
-                  readonly prefix: 'PropertyImage_propertyId_idx';
+                  readonly name: 'PropertyImageUrl_propertyId_idx_4bcae41c';
+                  readonly prefix: 'PropertyImageUrl_propertyId_idx';
                   readonly columns: readonly ['propertyId'];
                   readonly unique: false;
                 },
@@ -453,7 +453,7 @@ type ContractBase = Omit<
                 {
                   readonly source: {
                     readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'PropertyImage';
+                    readonly tableName: 'PropertyImageUrl';
                     readonly columns: readonly ['propertyId'];
                   };
                   readonly target: {
@@ -479,9 +479,9 @@ type ContractBase = Omit<
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Properties';
     };
-    readonly PropertyImage: {
+    readonly PropertyImageUrl: {
       readonly namespace: 'public' & NamespaceId;
-      readonly model: 'PropertyImage';
+      readonly model: 'PropertyImageUrl';
     };
   };
   readonly domain: {
@@ -520,10 +520,10 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly images: {
+              readonly imageUrls: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'PropertyImage';
+                  readonly model: 'PropertyImageUrl';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -545,7 +545,7 @@ type ContractBase = Omit<
               };
             };
           };
-          readonly PropertyImage: {
+          readonly PropertyImageUrl: {
             readonly fields: {
               readonly displayOrder: {
                 readonly nullable: false;
@@ -555,11 +555,11 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly objectKey: {
+              readonly propertyId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly propertyId: {
+              readonly url: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -579,13 +579,13 @@ type ContractBase = Omit<
               };
             };
             readonly storage: {
-              readonly table: 'PropertyImage';
+              readonly table: 'PropertyImageUrl';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly displayOrder: { readonly column: 'displayOrder' };
                 readonly id: { readonly column: 'id' };
-                readonly objectKey: { readonly column: 'objectKey' };
                 readonly propertyId: { readonly column: 'propertyId' };
+                readonly url: { readonly column: 'url' };
               };
             };
           };
@@ -637,7 +637,7 @@ type ContractBase = Omit<
         {
           readonly onCreate: { readonly id: 'uuidv4'; readonly kind: 'generator' };
           readonly ref: {
-            readonly entry: 'PropertyImage';
+            readonly entry: 'PropertyImageUrl';
             readonly field: 'id';
             readonly namespace: 'public';
           };

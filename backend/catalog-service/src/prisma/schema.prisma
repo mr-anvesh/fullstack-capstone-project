@@ -1,22 +1,22 @@
 // use prisma-8
 
 model Properties {
-  id            String   @id @onCreate(uuid())
+  id            String            @id @onCreate(uuid())
   hostId        UuidString
   name          String
   location      String
   pricePerDay   Decimal
   maxGuests     Int
-  images        PropertyImage[]
+  imageUrls     PropertyImageUrl[]
 
   @@index([location])
   @@index([hostId])
 }
 
-model PropertyImage {
-  id           String @id @onCreate(uuid())
+model PropertyImageUrl {
+  id           String     @id @onCreate(uuid())
   propertyId   String
-  objectKey    String
+  url          String
   displayOrder Int
   property     Properties @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 

@@ -1,5 +1,6 @@
 import { client } from "../config/redis";
 import { db } from "../prisma/db";
+import { getPropertyImageUrls } from "./propertyImages.service";
 
 // Implement CACHE-ASIDE Pattern
 export async function getuserListings(userId: string) {
@@ -19,11 +20,16 @@ export async function getuserListings(userId: string) {
     if(!data) throw new Error("No listings found for the user");
     
     // Cache the fetched listings in Redis for future requests
-    await client.set(userId, JSON.stringify(data), { EX: 24 * 3600 });
-    console.log("Cached URL in Redis for user:", userId);
+    const listings = await Promise.all(
+        data.map(async (listing) => ({
+            ...listing,
+            pricePerDay: Number(listing.pricePerDay),
+            imageUrls: await getPropertyImageUrls(listing.id),
+        })),
+    );
 
-    return data.map((listing) => ({
-        ...listing,
-        pricePerDay: Number(listing.pricePerDay),
-    }));
+    await client.set(userId, JSON.stringify(listings), { EX: 24 * 3600 });
+    console.log("Cached URLs in Redis for user:", userId);
+
+    return listings;
 }
