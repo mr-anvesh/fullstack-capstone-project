@@ -1,4 +1,4 @@
-- [x] add nginx (LB)
+- [x] add nginx (LB, Reverse Proxy)
 - [x] add (API Gateway)
 - [x] add postgresql with prisma orm
 - [x] add auth
