@@ -1,5 +1,6 @@
 import { db } from '../prisma/db.js';
 import { createBookingSchema, type CreateBooking} from '../schemas/booking.schema.js';
+import { publishNotification } from '../events/event.publisher.js';
 
 export async function createBooking(bookingData: CreateBooking) {
     const parsed = createBookingSchema.parse(bookingData);
@@ -29,5 +30,10 @@ export async function createBooking(bookingData: CreateBooking) {
         status: 'CONFIRMED',
     });
 
+    await publishNotification('newbooking', {
+        bookingId: query.id,
+        guestId: query.guestId,
+        hostId: query.hostId,
+    }).catch(console.error);
     return query;
 }

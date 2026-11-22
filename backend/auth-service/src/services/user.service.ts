@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { db } from '../prisma/db';
+import { publishNotification } from '../events/event.publisher';
 
 export async function registerUser(email: string, name: string, password: string) {
   const existingUser = await db.orm.public.User.first({ email });
@@ -9,11 +10,19 @@ export async function registerUser(email: string, name: string, password: string
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  return db.orm.public.User.create({
-    email: email,
-    name: name,
+  
+  const user = await db.orm.public.User.create({
+    email,
+    name,
     passwordHash: hashedPassword,
   });
+
+  await publishNotification('signup', {
+    name: user.name,
+    email: user.email,
+  }).catch(console.error);
+
+return user;
 }
 
 export async function loginUser(email: string, password: string) {

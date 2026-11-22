@@ -4,8 +4,7 @@
 - [x] add auth
 - [x] Database Schema Design
 - [x] add redis for search caching based on location, user
-- [ ] add rabbitmq
+- [x] add rabbitmq
+- [x] add nodemailer
 - [ ] add gRPC
 - [ ] add DOCKER
-
-

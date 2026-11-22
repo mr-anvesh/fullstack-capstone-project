@@ -2,13 +2,24 @@
 set -e
 
 project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-services=(auth-service booking-service catalog-service gateway)
+services=(auth-service booking-service catalog-service notification-service gateway)
 pids=()
 
 if ! command -v bun >/dev/null 2>&1; then
   printf 'Bun is required to run the TypeScript services.\n' >&2
   exit 1
 fi
+
+if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
+  printf 'Node.js and npm are required to build and run notification-service.\n' >&2
+  exit 1
+fi
+
+printf 'Building notification-service\n'
+(
+  cd -- "$project_dir/backend/notification-service"
+  npm run build
+)
 
 cleanup() {
   local pid
@@ -26,6 +37,9 @@ for service in "${services[@]}"; do
   printf 'Starting %s\n' "$service"
   (
     cd -- "$project_dir/backend/$service"
+    if [[ "$service" == notification-service ]]; then
+      exec node --env-file=.env dist/index.js
+    fi
     exec bun src/index.ts
   ) &
   pids+=("$!")
