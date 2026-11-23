@@ -1,5 +1,5 @@
 import type { Channel } from 'amqplib';
-import { consume } from '../config/rabbitmq.js';
+import { consume } from './consume.js';
 import { signupEvent } from '../schemas/signup.schema.js';
 import { sendEmail } from '../services/email.service.js';
 import { signupEmail } from '../templates/signup.js';
