@@ -1,12 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import { redis } from '../config/redis.js';
+import { publishNotification } from '../events/event.publisher.js';
 import { db } from '../prisma/db.js';
 import { createBookingSchema, type CreateBooking } from '../schemas/booking.schema.js';
-import { publishNotification } from '../events/event.publisher.js';
 
-const BOOKING_LOCK_TTL_MS = 10_000;
+const LOCK = 'LOCK';
+const LOCK_TTL_MS = 10_000;
 
-const RELEASE_LOCK = `
+const RELEASE_LOCK_SCRIPT = `
     if redis.call("GET", KEYS[1]) == ARGV[1] then
         return redis.call("DEL", KEYS[1])
     end
@@ -14,34 +15,40 @@ const RELEASE_LOCK = `
 `;
 
 export async function createBooking(bookingData: CreateBooking) {
-    const parsed = createBookingSchema.parse(bookingData);
-    const { guestId, hostId, propertyId, guestCount, totalAmount } = parsed;
-    const startDate = new Date(parsed.startsAt);
-    const endDate = new Date(parsed.endsAt);
+    const {
+        guestId,
+        hostId,
+        propertyId,
+        guestCount,
+        totalAmount,
+        startsAt,
+        endsAt,
+    } = createBookingSchema.parse(bookingData);
 
-    const key = `booking:lock:${propertyId.toLowerCase()}`;
-    const token = randomUUID();
+    const checkIn = new Date(startsAt);
+    const checkOut = new Date(endsAt);
+    const lockToken = randomUUID();
 
-    const acquired = await redis.sendCommand([
-        'SET', key, token, 'NX', 'PX', String(BOOKING_LOCK_TTL_MS),
-    ]).catch((cause: unknown) => {
-        throw new Error('BOOKING_LOCK_UNAVAILABLE', { cause });
-    });
+    const lockReply = await redis
+        .sendCommand(['SET', LOCK, lockToken, 'NX', 'PX', String(LOCK_TTL_MS)])
+        .catch((cause: unknown) => {
+            throw new Error('BOOKING_LOCK_UNAVAILABLE', { cause });
+        });
 
-    if (acquired?.toString() !== 'OK') {
+    if (lockReply?.toString() !== 'OK') {
         throw new Error('BOOKING_IN_PROGRESS');
     }
 
     let booking;
     try {
-        const conflict = await db.orm.public.Booking
+        const overlappingBooking = await db.orm.public.Booking
             .where({ propertyId })
-            .where((row) => row.status.neq('CANCELLED'))
-            .where((row) => row.startsAt.lt(endDate))
-            .where((row) => row.endsAt.gt(startDate))
+            .where((existing) => existing.status.neq('CANCELLED'))
+            .where((existing) => existing.startsAt.lt(checkOut))
+            .where((existing) => existing.endsAt.gt(checkIn))
             .first();
 
-        if (conflict) {
+        if (overlappingBooking) {
             throw new Error('PROPERTY_UNAVAILABLE');
         }
 
@@ -49,14 +56,16 @@ export async function createBooking(bookingData: CreateBooking) {
             guestId,
             hostId,
             propertyId,
-            startsAt: startDate,
-            endsAt: endDate,
+            startsAt: checkIn,
+            endsAt: checkOut,
             guestCount,
             totalAmount: totalAmount.toString(),
             status: 'CONFIRMED',
         });
     } finally {
-        await redis.sendCommand(['EVAL', RELEASE_LOCK, '1', key, token])
+        // Delete the key only if this request still owns the lock.
+        await redis
+            .sendCommand(['EVAL', RELEASE_LOCK_SCRIPT, '1', LOCK, lockToken])
             .catch((error: unknown) => {
                 console.error('Could not release booking lock:', error);
             });
