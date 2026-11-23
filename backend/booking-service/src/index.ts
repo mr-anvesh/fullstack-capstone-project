@@ -4,6 +4,7 @@ import { createBookingController } from './controllers/createBooking.controller.
 import { getUserBookingsController } from './controllers/getUserBookings.controller.js';
 import { cancelBookingController } from './controllers/cancelBooking.controller.js';
 import { getBookingDetailsController } from './controllers/getBookingDetails.controller.js';
+import { redis } from './config/redis.js';
 
 const app = express();
 const bookings = express.Router();
@@ -17,5 +18,7 @@ bookings.post('/cancel-booking', cancelBookingController);
 bookings.post('/getdetails', getBookingDetailsController);
 
 app.use('/bookings', bookings);
+
+await redis.connect();
 
 app.listen(process.env.PORT || 4002);
