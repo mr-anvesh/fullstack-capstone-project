@@ -1,10 +1,5 @@
 import { z } from 'zod';
 
-export const signupEvent = z.object({
-  name: z.string(),
-  email: z.email(),
-});
-
 export const bookingEvent = z.object({
   bookingId: z.string(),
   guestId: z.uuid(),

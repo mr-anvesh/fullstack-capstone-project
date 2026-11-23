@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { BookingEvent, BookingRole } from '../schemas/events.js';
+import type { BookingEvent, BookingRole } from '../schemas/bookingEvent.schema.js';
 import { sendEmail } from './email.service.js';
 
 const contact = z.object({ email: z.email() });

@@ -1,6 +1,4 @@
 import { connect, type Channel } from 'amqplib';
-
-const exchange = 'notifications';
 const queues = ['signup', 'newbooking', 'cancellation'] as const;
 
 export async function openRabbitMQ() {
@@ -8,23 +6,19 @@ export async function openRabbitMQ() {
   if (!url) throw new Error('RABBITMQ_URL is required');
 
   const connection = await connect(url);
-  connection.on('error', console.error);
-
   const channel = await connection.createChannel();
-  channel.on('error', console.error);
-  channel.on('close', () => process.exit(1));
 
-  await channel.assertExchange(exchange, 'direct', { durable: true });
+  await channel.assertExchange("notifications", 'direct', { durable: true });
   await channel.assertQueue('DLQ', { durable: true });
-  await channel.bindQueue('DLQ', exchange, 'DLQ');
+  await channel.bindQueue('DLQ', "notifications", 'DLQ');
 
   for (const queue of queues) {
     await channel.assertQueue(queue, {
       durable: true,
-      deadLetterExchange: exchange,
+      deadLetterExchange: "notifications",
       deadLetterRoutingKey: 'DLQ',
     });
-    await channel.bindQueue(queue, exchange, queue);
+    await channel.bindQueue(queue, "notifications", queue);
   }
 
   await channel.prefetch(1);
@@ -33,7 +27,7 @@ export async function openRabbitMQ() {
 
 export function consume<T>(
   channel: Channel,
-  queue: (typeof queues)[number],
+  queue: 'signup' | 'newbooking' | 'cancellation',
   schema: { parse(value: unknown): T },
   handle: (event: T) => Promise<void>,
 ) {

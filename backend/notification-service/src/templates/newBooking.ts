@@ -1,4 +1,4 @@
-import type { BookingRole } from '../schemas/events.js';
+import type { BookingRole } from '../schemas/bookingEvent.schema.js';
 
 export function newBookingEmail(bookingId: string, role: BookingRole) {
   return {
