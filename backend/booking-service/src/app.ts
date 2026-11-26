@@ -21,4 +21,4 @@ app.use('/bookings', bookings);
 
 await redis.connect();
 
-app.listen(process.env.PORT || 4002);
+export default app;

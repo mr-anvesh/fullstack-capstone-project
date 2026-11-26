@@ -12,4 +12,4 @@ authRouter.post('/login', loginUserController);
 
 app.use('/auth', authRouter);
 
-app.listen(process.env.PORT || 4001);
+export default app;

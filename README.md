@@ -6,5 +6,5 @@
 - [x] add redis for search caching based on location, user
 - [x] add rabbitmq
 - [x] add nodemailer
-- [ ] add gRPC
 - [ ] add DOCKER
+- [ ] add gRPC

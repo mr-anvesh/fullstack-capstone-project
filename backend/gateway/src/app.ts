@@ -21,6 +21,4 @@ router.use('/notifications', proxy(notificationUrl));
 
 app.use(router);
 
-const PORT = process.env.PORT;
-
-app.listen(PORT, () => console.log(`Gateway is running on PORT: ${PORT}`));
+export default app;

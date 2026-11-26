@@ -21,8 +21,8 @@ router.post('/listings/delete', deleteListingController);
 
 app.use(router);
 
-void connectRedis().catch((err) => {
-    console.error('Error connecting to Redis:', err);
-});
+await connectRedis();
 
-app.listen(process.env.PORT || 4003);
+export default app;
+
+
